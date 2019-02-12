@@ -79,9 +79,9 @@ public class PeriodDivision {
 
 	private void divide(StringBuilder currentNumerator, int decimalOperationQty, int shift, Result result) {
 		int currentDeductor = findCurrentDeductor(currentNumerator, result);
-		int numeratorDedactorLengthDifference = currentNumerator.toString().length()
+		int numeratorDeductorLengthDifference = currentNumerator.toString().length()
 				- String.valueOf(currentDeductor).length();
-		addCurrentDeductorToResult(currentDeductor, decimalOperationQty, shift, numeratorDedactorLengthDifference,
+		addCurrentDeductorToResult(currentDeductor, decimalOperationQty, shift, numeratorDeductorLengthDifference,
 				result);
 		replaceCurrentNumerator(currentNumerator, currentDeductor);
 	}
@@ -93,10 +93,10 @@ public class PeriodDivision {
 	}
 
 	private void addCurrentDeductorToResult(int currentDeductor, int decimalOperationQty, int shift,
-			int numeratorDedactorLengthDifference, Result result) {
+			int numeratorDeductorLengthDifference, Result result) {
 		int currentIteration = result.getOperationQuantity() + decimalOperationQty;
 		result.addСurrentDeductorValue(currentIteration, String.valueOf(currentDeductor));
-		result.addСurrentDeductorShift(currentIteration, shift + numeratorDedactorLengthDifference);
+		result.addСurrentDeductorShift(currentIteration, shift + numeratorDeductorLengthDifference);
 	}
 
 	private void replaceCurrentNumerator(StringBuilder currentNumerator, int currentDeductor) {
