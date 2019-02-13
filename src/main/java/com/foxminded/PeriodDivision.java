@@ -3,12 +3,20 @@ package com.foxminded;
 public class PeriodDivision {
 
 	public String divideDecimal(int numerator, int denominator) {
-		LongDivision longDivision = new LongDivision();
-		Result result = longDivision.longDivide(numerator, denominator);
+		Result result = getIntegerDivisionResult(numerator, denominator);
+		performDecimalDivision(numerator, denominator, result);
+		return createDivisionString(result);
+	}
 
+
+	private Result getIntegerDivisionResult(int numerator, int denominator){
+		LongDivision longDivision = new LongDivision();
+		return longDivision.longDivide(numerator, denominator);
+	}
+	
+	private void performDecimalDivision(int numerator, int denominator, Result result) {
 		int integerOperationQty = result.getOperationQuantity();
 		StringBuilder currentNumerator = new StringBuilder(result.getCurrentNumeratorElement(integerOperationQty));
-
 		if (!currentNumerator.toString().equals("0")) {
 			result.initWithAbsoluteValues(numerator, denominator);
 			int shift = result.getNumerator().length() - currentNumerator.toString().length();
@@ -16,9 +24,8 @@ public class PeriodDivision {
 			findDecimalQuotient(integerOperationQty, currentNumerator, shift, result);
 			addSigns(result);
 		}
-		return createDivisionString(result);
 	}
-
+	
 	private void removeCurrentNumeratorAndQuotientSignFromResult(int integerOperationQty, Result result) {
 		result.removeCurrentNumeratorElement(integerOperationQty);
 		result.removeCurrentNumeratorShift(integerOperationQty);
