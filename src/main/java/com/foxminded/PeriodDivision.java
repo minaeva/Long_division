@@ -10,20 +10,13 @@ public class PeriodDivision {
 		StringBuilder currentNumerator = new StringBuilder(result.getCurrentNumeratorElement(integerOperationQty));
 
 		if (!currentNumerator.toString().equals("0")) {
-			initResult(numerator, denominator, result);
+			result.initWithAbsoluteValues(numerator, denominator);
 			int shift = result.getNumerator().length() - currentNumerator.toString().length();
 			removeCurrentNumeratorAndQuotientSignFromResult(integerOperationQty, result);
 			findDecimalQuotient(integerOperationQty, currentNumerator, shift, result);
 			addSigns(result);
 		}
 		return createDivisionString(result);
-	}
-
-	private void initResult(int numerator, int denominator, Result result) {
-		result.setNumerator(String.valueOf(Math.abs(numerator)));
-		result.setDenominator(String.valueOf(Math.abs(denominator)));
-		result.setIsNumeratorNegative(numerator < 0);
-		result.setIsDenominatorNegative(denominator < 0);
 	}
 
 	private void removeCurrentNumeratorAndQuotientSignFromResult(int integerOperationQty, Result result) {
@@ -42,7 +35,6 @@ public class PeriodDivision {
 
 		while ((!currentNumerator.toString().equals("0")) && (decimalOperationQty < 10)) {
 			findCurrentNumerator(currentNumerator, decimalOperationQty, shift, result);
-			String res = result.getQuotient().toString();
 			divide(currentNumerator, decimalOperationQty, shift, result);
 			decimalOperationQty++;
 			shift++;
@@ -130,7 +122,6 @@ public class PeriodDivision {
 	}
 
 	private int processDecimalPart(StringBuilder currentNumerator, Result result) {
-		String s = result.getQuotient().toString();
 		int decimalPartStart = result.getQuotient().indexOf(".");
 		StringBuilder newQuotient = new StringBuilder(result.getQuotient().substring(0, decimalPartStart + 1));
 		StringBuilder decimalPart = new StringBuilder(

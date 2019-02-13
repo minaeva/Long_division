@@ -16,6 +16,18 @@ public class Result {
 	private boolean isDenominatorNegative;
 	private int iterationQuantity;
 
+	public void init(int numerator, int denominator) {
+		setNumerator(String.valueOf(numerator));
+		setDenominator(String.valueOf(denominator));
+		setIsNumeratorNegative(numerator < 0);
+		setIsDenominatorNegative(denominator < 0);
+	}
+	
+	public void initWithAbsoluteValues(int numerator, int denominator) {
+		setNumerator(String.valueOf(Math.abs(numerator)));
+		setDenominator(String.valueOf(Math.abs(denominator)));
+	}
+	
 	public boolean calculateResultSign() {
 		return isNumeratorNegative ^ isDenominatorNegative;
 	}

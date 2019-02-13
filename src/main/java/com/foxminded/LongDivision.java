@@ -39,21 +39,14 @@ public class LongDivision {
 	}
 
 	private void addInputToResult(int numerator, int denominator, Result result) {
-		init(numerator, denominator);
-		initResult(numerator, denominator, result);
+		result.init(numerator, denominator);
+		init(numerator, denominator, result);
 	}
 
-	private void init(int numerator, int denominator) {
+	private void init(int numerator, int denominator, Result result) {
 		this.numerator = String.valueOf(Math.abs(numerator));
 		this.nextNumerator = String.valueOf(Math.abs(numerator));
 		this.denominator = String.valueOf(Math.abs(denominator));
-	}
-
-	private void initResult(int numerator, int denominator, Result result) {
-		result.setNumerator(String.valueOf(numerator));
-		result.setDenominator(String.valueOf(denominator));
-		result.setIsNumeratorNegative(numerator < 0);
-		result.setIsDenominatorNegative(denominator < 0);
 	}
 
 	private boolean findCurrentNumerator(Result result) {
