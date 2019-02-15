@@ -48,7 +48,7 @@ public class PeriodDivision {
 
 		decimalOperationQuantity++;
 		while ((!currentNumerator.toString().equals("0")) && (decimalOperationQuantity < 10)) {
-			findCurrentNumerator(currentNumerator, decimalOperationQuantity, currentShift, result);
+			updateCurrentNumerator(currentNumerator, decimalOperationQuantity, currentShift, result);
 			int numeratorLength = currentNumerator.length();
 			int currentDeductor = divide(currentNumerator, decimalOperationQuantity, currentShift, result);
 			int remainderLength = findNextNumerator(currentNumerator, currentDeductor);
@@ -65,14 +65,14 @@ public class PeriodDivision {
 
 	private int firstOperation(StringBuilder currentNumerator, int decimalOperationQuantity, Result result) {
 		int firstShift = result.getNumerator().length() - currentNumerator.toString().length();
-		findCurrentNumerator(currentNumerator, decimalOperationQuantity, firstShift, result);
+		updateCurrentNumerator(currentNumerator, decimalOperationQuantity, firstShift, result);
 		int numeratorLength = currentNumerator.length();
 		int currentDeductor = divide(currentNumerator, decimalOperationQuantity, firstShift, result);
 		int remainderLength = findNextNumerator(currentNumerator, currentDeductor);
 		return firstShift + numeratorLength - remainderLength;
 	}
 
-	private void findCurrentNumerator(StringBuilder currentNumerator, int decimalOperationQuantity, int shift,
+	private void updateCurrentNumerator(StringBuilder currentNumerator, int decimalOperationQuantity, int shift,
 			Result result) {
 		currentNumerator.append('0');
 		while (Integer.parseInt(currentNumerator.toString()) < Integer.parseInt(result.getDenominator())) {
