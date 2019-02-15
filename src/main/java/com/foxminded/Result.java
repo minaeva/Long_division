@@ -75,6 +75,10 @@ public class Result {
 			this.quotient = quotient;
 	}
 
+	public void setQuotient(String quotient) {
+		this.quotient = new StringBuilder(quotient);
+}
+
 	public void setDenominator(String denominator) {
 		this.denominator = denominator;
 	}

@@ -14,9 +14,6 @@ public class LongDivision {
 	private int iteration;
 	private int pointer = -1;
 
-	// x : y = z + a,
-	// x - numerator, y - denominator, z - quotient, a - remainder
-
 	public Result longDivide(int toDivide, int divider) {
 		Result result = new Result();
 		validateInput(divider);
@@ -137,9 +134,10 @@ public class LongDivision {
 	private void processDenominatorBiggerThanNumerator(Result result) {
 		if (iteration == 0) {
 			result.addCurrentNumerator(iteration, numerator);
-			result.addCurrentNumeratorShift(iteration, (numerator.length()));
+			result.addCurrentNumeratorShift(iteration, 0);
 			result.addСurrentDeductorValue(iteration, "0");
-			result.addСurrentDeductorShift(iteration, (numerator.length() - 1));
+			int numeratorLength = result.getNumerator().length();
+			result.addСurrentDeductorShift(iteration, numeratorLength - 1);
 			iteration++;
 		}
 	}

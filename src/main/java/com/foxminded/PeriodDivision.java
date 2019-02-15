@@ -18,13 +18,13 @@ public class PeriodDivision {
 		StringBuilder currentNumerator = new StringBuilder(result.getCurrentNumeratorElement(integerOperationQuantity));
 		if (!currentNumerator.toString().equals("0")) {
 			result.initWithAbsoluteValues(numerator, denominator);
-			removeCurrentNumeratorAndQuotientSignFromResult(integerOperationQuantity, result);
+			removeLatestNumeratorAndQuotientSignFromResult(integerOperationQuantity, result);
 			findDecimalQuotient(integerOperationQuantity, currentNumerator, result);
 			addSigns(result);
 		}
 	}
 
-	private void removeCurrentNumeratorAndQuotientSignFromResult(int integerOperationQuantity, Result result) {
+	private void removeLatestNumeratorAndQuotientSignFromResult(int integerOperationQuantity, Result result) {
 		removeLatestNumerator(integerOperationQuantity, result);
 		removeNegativeSign(result);
 	}
@@ -33,46 +33,53 @@ public class PeriodDivision {
 		result.removeCurrentNumeratorElement(integerOperationQuantity);
 		result.removeCurrentNumeratorShift(integerOperationQuantity);
 	}
-	
+
 	private void removeNegativeSign(Result result) {
 		if (result.getQuotient().charAt(0) == '-') {
 			StringBuilder positiveQuotient = new StringBuilder(result.getQuotient().substring(1));
 			result.setQuotient(positiveQuotient);
 		}
 	}
-	
-	private void findDecimalQuotient(int integerOperationQuantity, StringBuilder currentNumerator, Result result) {
-		int decimalOperationQuantity = 0;
-		result.addQuotient(".");
-		int shift = result.getNumerator().length() - currentNumerator.toString().length();
 
+	private void findDecimalQuotient(int integerOperationQuantity, StringBuilder currentNumerator, Result result) {
+		result.addQuotient(".");
+		int decimalOperationQuantity = 0;
+		int currentShift = firstOperation(currentNumerator, decimalOperationQuantity, result);
+
+		decimalOperationQuantity++;
 		while ((!currentNumerator.toString().equals("0")) && (decimalOperationQuantity < 10)) {
-			findCurrentNumerator(currentNumerator, decimalOperationQuantity, shift, result);
-			divide(currentNumerator, decimalOperationQuantity, shift, result);
+			findCurrentNumerator(currentNumerator, decimalOperationQuantity, currentShift, result);
+			int numeratorLength = currentNumerator.length();
+			int currentDeductor = divide(currentNumerator, decimalOperationQuantity, currentShift, result);
+			int remainderLength = findNextNumerator(currentNumerator, currentDeductor);
+			currentShift += numeratorLength - remainderLength;
 			decimalOperationQuantity++;
-			shift++;
 		}
 
 		if (decimalOperationQuantity >= 10) {
-			decimalOperationQuantity = processDecimalPart(result);
-			result.setOperationQuantity(integerOperationQuantity + decimalOperationQuantity);
+			processDecimalPart(currentNumerator, integerOperationQuantity, decimalOperationQuantity, result);
 		} else {
-			addRemainderToResult(currentNumerator, decimalOperationQuantity, shift, result);
+			decimalLess10FinishDivision(currentNumerator, decimalOperationQuantity, result);
 		}
+	}
+
+	private int firstOperation(StringBuilder currentNumerator, int decimalOperationQuantity, Result result) {
+		int firstShift = result.getNumerator().length() - currentNumerator.toString().length();
+		findCurrentNumerator(currentNumerator, decimalOperationQuantity, firstShift, result);
+		int numeratorLength = currentNumerator.length();
+		int currentDeductor = divide(currentNumerator, decimalOperationQuantity, firstShift, result);
+		int remainderLength = findNextNumerator(currentNumerator, currentDeductor);
+		return firstShift + numeratorLength - remainderLength;
 	}
 
 	private void findCurrentNumerator(StringBuilder currentNumerator, int decimalOperationQuantity, int shift,
 			Result result) {
 		currentNumerator.append('0');
 		while (Integer.parseInt(currentNumerator.toString()) < Integer.parseInt(result.getDenominator())) {
-			addZeroToCurrentNumerator(currentNumerator, result);
+			result.addZeroToQuotient();
+			currentNumerator.append('0');
 		}
 		addCurrentNumeratorToResult(currentNumerator, decimalOperationQuantity, shift, result);
-	}
-
-	private void addZeroToCurrentNumerator(StringBuilder currentNumerator, Result result) {
-		result.addZeroToQuotient();
-		currentNumerator.append('0');
 	}
 
 	private void addCurrentNumeratorToResult(StringBuilder currentNumerator, int decimalOperationQuantity, int shift,
@@ -82,13 +89,13 @@ public class PeriodDivision {
 		result.addCurrentNumeratorShift(currentIteration, shift);
 	}
 
-	private void divide(StringBuilder currentNumerator, int decimalOperationQuantity, int shift, Result result) {
+	private int divide(StringBuilder currentNumerator, int decimalOperationQuantity, int shift, Result result) {
 		int currentDeductor = findCurrentDeductor(currentNumerator, result);
 		int numeratorDeductorLengthDifference = currentNumerator.toString().length()
 				- String.valueOf(currentDeductor).length();
 		addCurrentDeductorToResult(currentDeductor, decimalOperationQuantity, shift, numeratorDeductorLengthDifference,
 				result);
-		replaceCurrentNumerator(currentNumerator, currentDeductor);
+		return currentDeductor;
 	}
 
 	private int findCurrentDeductor(StringBuilder currentNumerator, Result result) {
@@ -104,88 +111,123 @@ public class PeriodDivision {
 		result.addСurrentDeductorShift(currentIteration, shift + numeratorDeductorLengthDifference);
 	}
 
-	private void replaceCurrentNumerator(StringBuilder currentNumerator, int currentDeductor) {
+	private int findNextNumerator(StringBuilder currentNumerator, int currentDeductor) {
 		int remainder = Integer.parseInt(currentNumerator.toString()) - currentDeductor;
 		currentNumerator.delete(0, currentNumerator.length());
 		currentNumerator.append(remainder);
-	}
-
-	private void addRemainderToResult(StringBuilder currentNumerator, int decimalOperationQuantity, int shift,
-			Result result) {
-		int currentIteration = result.getOperationQuantity() + decimalOperationQuantity;
-		String previousNumerator = result.getCurrentNumeratorElement(currentIteration - 1);
-		int lengthDifference = previousNumerator.length() - currentNumerator.toString().length();
-		result.addCurrentNumerator(currentIteration, currentNumerator.toString());
-		result.addCurrentNumeratorShift(currentIteration, shift + lengthDifference - 1);
-		result.setOperationQuantity(currentIteration);
+		return String.valueOf(remainder).length();
 	}
 
 	private void addSigns(Result result) {
 		addQuotientSign(result);
 		addNumeratorSign(result);
-		addDenumeratorSign(result);
+		addDenominatorSign(result);
 	}
-	
+
 	private void addQuotientSign(Result result) {
 		if (result.calculateResultSign()) {
 			result.setQuotient(result.getQuotient().insert(0, '-'));
 		}
 	}
 
-	private void addNumeratorSign(Result result) {
+	private void addDenominatorSign(Result result) {
 		if (result.getIsDenominatorNegative()) {
 			StringBuilder oldDenominator = new StringBuilder(result.getDenominator());
 			result.setDenominator(oldDenominator.insert(0, '-').toString());
 		}
 	}
 
-	private void addDenumeratorSign(Result result) {
+	private void addNumeratorSign(Result result) {
 		if (result.getIsNumeratorNegative()) {
 			StringBuilder oldNumerator = new StringBuilder(result.getNumerator());
-			result.setDenominator(oldNumerator.insert(0, '-').toString());
+			result.setNumerator(oldNumerator.insert(0, '-').toString());
 		}
 	}
 
-	private int processDecimalPart(Result result) {
-		int decimalPartStart = result.getQuotient().indexOf(".");
-		StringBuilder newQuotient = new StringBuilder(result.getQuotient().substring(0, decimalPartStart + 1));
-		StringBuilder decimalPart = new StringBuilder(
-				result.getQuotient().substring(decimalPartStart + 1, decimalPartStart + 11));
-		String newDecimalPart = findPeriod(decimalPart);
-
-		int digitsAfterPoint = findNonZeroDecimalDigitsQuantity(newDecimalPart);
-
-		newQuotient.append(newDecimalPart);
-		result.setQuotient(newQuotient);
-		return digitsAfterPoint;
+	private void processDecimalPart(StringBuilder currentNumerator, int integerOperationQuantity, int decimalOperationQuantity, Result result) {
+		String newDecimal = result.getQuotient().substring(integerOperationQuantity + 1, integerOperationQuantity + 11);
+		int nonZeroDigitsAfterPoint = findPeriod(newDecimal, integerOperationQuantity, result);
+		if (nonZeroDigitsAfterPoint != -1) {
+			result.setOperationQuantity(integerOperationQuantity + nonZeroDigitsAfterPoint);
+		}
+		else {
+			noPeriodFinishDivision(currentNumerator, newDecimal, integerOperationQuantity, decimalOperationQuantity, result);
+		}
 	}
 
-	private String findPeriod(StringBuilder decimalPart) {
-		int counter = 0;
-		String period = "";
-		while (counter < 10) {
-			String digitToCheck = decimalPart.substring(counter, counter + 1);
-			int nextOccurance = decimalPart.indexOf(digitToCheck, counter + 1);
-			if (nextOccurance > 0) {
-				period = decimalPart.substring(counter, nextOccurance);
-				break;
-			}
-			counter++;
-		}
-		if (!period.equals("")) {
-			decimalPart.replace(counter, 10, "(" + period + ")");
-		}
-		return decimalPart.toString();
-	}
-
-	private int findNonZeroDecimalDigitsQuantity(String newDecimalPart) {
-		StringBuilder sb = new StringBuilder(newDecimalPart);
-		for (int i = 0; i < sb.length(); i++) {
-			if ((sb.charAt(i) == '(') || (sb.charAt(i) == ')') || (sb.charAt(i) == '0')) {
-				sb.deleteCharAt(i);
+	private int findPeriod(String newDecimal, int integerOperationQuantity, Result result) {
+		for (int first = integerOperationQuantity; first < integerOperationQuantity + 10; first++) {
+			for (int second = first + 1; second < integerOperationQuantity + 10; second++) {
+				if (result.getCurrentNumeratorElement(first).equals(result.getCurrentNumeratorElement(second))) {
+					int periodLength = findNonZeroDigits(first, second, result);
+					StringBuilder newQuotient = new StringBuilder(result.getQuotient().substring(0, first + 1));
+					newDecimal = "(" + result.getQuotient().substring(first + 1, first + periodLength) + ")";
+					newQuotient.append(newDecimal);
+					result.setQuotient(newQuotient);
+					return findNonZeroDecimalWithPeriod(newQuotient.toString());
+				}
 			}
 		}
-		return sb.length();
+		return -1;
+	}
+	
+	private int findNonZeroDecimalWithPeriod(String newDecimalPart) {
+		int integerPart = newDecimalPart.indexOf('.');
+		String decimalString = newDecimalPart.substring(integerPart + 1);
+		int toExclude = 0;
+		for (int i = 0; i < decimalString.length(); i++) {
+			if ((decimalString.charAt(i) == '0') || (decimalString.charAt(i) == '(') || (decimalString.charAt(i) == ')')) {
+				toExclude++;
+			}
+		}
+		return decimalString.length() - toExclude;
+	}
+
+	private int findNonZeroDigits(int first, int second, Result result) {
+		int quantity = 0;
+		int i = 0;
+		while (quantity <= (second - first)) {
+			if (result.getQuotient().charAt(first + i) != '0') {
+				quantity++;
+			}
+			i++;
+		}
+		return i;
+	}
+	
+	private void decimalLess10FinishDivision(StringBuilder currentNumerator, int decimalOperationQuantity, Result result) {
+		addRemainder(currentNumerator, decimalOperationQuantity, result);
+		int currentIteration = result.getOperationQuantity() + decimalOperationQuantity;
+		result.setOperationQuantity(currentIteration);
+	}
+
+	private void noPeriodFinishDivision(StringBuilder currentNumerator, String newDecimal, int integerOperationQuantity, int decimalOperationQuantity, Result result) {
+		addRemainder(currentNumerator, decimalOperationQuantity, result);
+
+		String oldInteger = result.getQuotient().substring(0, integerOperationQuantity + 1);
+		newDecimal = result.getQuotient().substring(integerOperationQuantity + 1, integerOperationQuantity + 11);
+		result.setQuotient(oldInteger + newDecimal);
+		int nonZeroDigitsAfterPoint = findNonZeroDecimalNoPeriod(newDecimal);
+		result.setOperationQuantity(integerOperationQuantity + nonZeroDigitsAfterPoint);
+	}
+	
+	private void addRemainder(StringBuilder currentNumerator, int decimalOperationQuantity, Result result) {
+		int currentIteration = result.getOperationQuantity() + decimalOperationQuantity;
+		String previousNumerator = result.getCurrentNumeratorElement(currentIteration - 1);
+		int previousShift = result.getCurrentNumeratorShiftElement(currentIteration - 1);
+		int lengthDifference = previousNumerator.length() - currentNumerator.toString().length();
+		result.addCurrentNumerator(currentIteration, currentNumerator.toString());
+		result.addCurrentNumeratorShift(currentIteration, previousShift + lengthDifference);
+	}
+
+	private int findNonZeroDecimalNoPeriod(String newDecimalPart) {
+		int zeroesQuantity = 0;
+		for (int i = 0; i < newDecimalPart.length(); i++) {
+			if ((newDecimalPart.charAt(i) == '0')) {
+				zeroesQuantity++;
+			}
+		}
+		return newDecimalPart.length() - zeroesQuantity;
 	}
 
 	private String createDivisionString(Result result) {
