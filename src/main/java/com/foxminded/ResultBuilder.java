@@ -82,7 +82,7 @@ public class ResultBuilder {
 				minusSpace = "";
 			}
 			int shift = r.getCurrentNumeratorShiftElement(i);
-			StringBuilder underscores = createLineOfSymbols("-", r.getCurrentNumeratorElement(i).toString().length() + 1);
+			StringBuilder underscores = createLineOfSymbols("-", r.getCurrentNumeratorElement(i).length() + 1);
 			appendResult(minusSpace, createLineOfSymbols(" ", shift).toString(), underscores.toString(), "\n");
 			i++;
 		}
