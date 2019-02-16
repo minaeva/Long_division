@@ -2,7 +2,7 @@ package com.foxminded;
 
 public class PeriodDivision {
 
-	final static int DIGITS_AFTER_POINT = 10;
+	private final static int DIGITS_AFTER_POINT = 10;
 
 	public String divideDecimal(int numerator, int denominator) {
 		Result result = getIntegerDivisionResult(numerator, denominator);
@@ -148,10 +148,8 @@ public class PeriodDivision {
 
 	private void processDecimalPart(StringBuilder currentNumerator, int integerOperationQuantity,
 			int decimalOperationQuantity, Result result) {
-		int nonZeroDigitsAfterPoint = findPeriod(integerOperationQuantity, result);
-		if (nonZeroDigitsAfterPoint != -1) {
-			result.setOperationQuantity(integerOperationQuantity + nonZeroDigitsAfterPoint);
-		} else {
+		int nonZeroFractionalDigits = findPeriod(integerOperationQuantity, result);
+		if (nonZeroFractionalDigits == -1) {
 			finishDivisionNoPeriodFound(currentNumerator, integerOperationQuantity, decimalOperationQuantity, result);
 		}
 	}
@@ -160,7 +158,9 @@ public class PeriodDivision {
 		for (int first = integerOperationQuantity; first < integerOperationQuantity + DIGITS_AFTER_POINT; first++) {
 			for (int second = first + 1; second < integerOperationQuantity + DIGITS_AFTER_POINT; second++) {
 				if (result.getCurrentNumeratorElement(first).equals(result.getCurrentNumeratorElement(second))) {
-					return finishDivisionPeriodFound(first, second, result);
+					int nonZeroFractionalDigits = finishDivisionPeriodFound(first, second, result);
+					result.setOperationQuantity(integerOperationQuantity + nonZeroFractionalDigits);
+					return nonZeroFractionalDigits;
 				}
 			}
 		}
@@ -183,8 +183,8 @@ public class PeriodDivision {
 		String newDecimal = result.getQuotient().substring(integerOperationQuantity + 1,
 				integerOperationQuantity + DIGITS_AFTER_POINT + 1);
 		result.setQuotient(oldInteger + newDecimal);
-		int nonZeroDigitsAfterPoint = findNonZeroDecimalNoPeriod(newDecimal);
-		result.setOperationQuantity(integerOperationQuantity + nonZeroDigitsAfterPoint);
+		int nonZeroFractionalDigits = findNonZeroDecimalNoPeriod(newDecimal);
+		result.setOperationQuantity(integerOperationQuantity + nonZeroFractionalDigits);
 	}
 
 	private void finishDivisionWithoutPeriod(StringBuilder currentNumerator, int decimalOperationQuantity,
