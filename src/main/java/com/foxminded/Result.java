@@ -58,7 +58,7 @@ public class Result {
 	}
 
 	public Result addQuotient(int value) {
-		quotient.append(String.valueOf(value));
+		quotient.append(value);
 		return this;
 	}
 

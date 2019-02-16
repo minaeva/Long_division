@@ -2,6 +2,8 @@ package com.foxminded;
 
 public class PeriodDivision {
 
+	final static int DIGITS_AFTER_POINT = 10;
+
 	public String divideDecimal(int numerator, int denominator) {
 		Result result = getIntegerDivisionResult(numerator, denominator);
 		performDecimalDivision(numerator, denominator, result);
@@ -47,7 +49,7 @@ public class PeriodDivision {
 		int currentShift = firstOperation(currentNumerator, decimalOperationQuantity, result);
 
 		decimalOperationQuantity++;
-		while ((!currentNumerator.toString().equals("0")) && (decimalOperationQuantity < 10)) {
+		while ((!currentNumerator.toString().equals("0")) && (decimalOperationQuantity < DIGITS_AFTER_POINT)) {
 			updateCurrentNumerator(currentNumerator, decimalOperationQuantity, currentShift, result);
 			int numeratorLength = currentNumerator.length();
 			int currentDeductor = divide(currentNumerator, decimalOperationQuantity, currentShift, result);
@@ -56,10 +58,10 @@ public class PeriodDivision {
 			decimalOperationQuantity++;
 		}
 
-		if (decimalOperationQuantity >= 10) {
+		if (decimalOperationQuantity >= DIGITS_AFTER_POINT) {
 			processDecimalPart(currentNumerator, integerOperationQuantity, decimalOperationQuantity, result);
 		} else {
-			decimalLess10FinishDivision(currentNumerator, decimalOperationQuantity, result);
+			finishDivisionWithoutPeriod(currentNumerator, decimalOperationQuantity, result);
 		}
 	}
 
@@ -144,31 +146,52 @@ public class PeriodDivision {
 		}
 	}
 
-	private void processDecimalPart(StringBuilder currentNumerator, int integerOperationQuantity, int decimalOperationQuantity, Result result) {
-		String newDecimal = result.getQuotient().substring(integerOperationQuantity + 1, integerOperationQuantity + 11);
-		int nonZeroDigitsAfterPoint = findPeriod(newDecimal, integerOperationQuantity, result);
+	private void processDecimalPart(StringBuilder currentNumerator, int integerOperationQuantity,
+			int decimalOperationQuantity, Result result) {
+		int nonZeroDigitsAfterPoint = findPeriod(integerOperationQuantity, result);
 		if (nonZeroDigitsAfterPoint != -1) {
 			result.setOperationQuantity(integerOperationQuantity + nonZeroDigitsAfterPoint);
-		}
-		else {
-			noPeriodFinishDivision(currentNumerator, newDecimal, integerOperationQuantity, decimalOperationQuantity, result);
+		} else {
+			finishDivisionNoPeriodFound(currentNumerator, integerOperationQuantity, decimalOperationQuantity, result);
 		}
 	}
 
-	private int findPeriod(String newDecimal, int integerOperationQuantity, Result result) {
-		for (int first = integerOperationQuantity; first < integerOperationQuantity + 10; first++) {
-			for (int second = first + 1; second < integerOperationQuantity + 10; second++) {
+	private int findPeriod(int integerOperationQuantity, Result result) {
+		for (int first = integerOperationQuantity; first < integerOperationQuantity + DIGITS_AFTER_POINT; first++) {
+			for (int second = first + 1; second < integerOperationQuantity + DIGITS_AFTER_POINT; second++) {
 				if (result.getCurrentNumeratorElement(first).equals(result.getCurrentNumeratorElement(second))) {
-					int periodLength = findNonZeroDigits(first, second, result);
-					StringBuilder newQuotient = new StringBuilder(result.getQuotient().substring(0, first + 1));
-					newDecimal = "(" + result.getQuotient().substring(first + 1, first + periodLength) + ")";
-					newQuotient.append(newDecimal);
-					result.setQuotient(newQuotient);
-					return findNonZeroDecimalWithPeriod(newQuotient.toString());
+					return finishDivisionPeriodFound(first, second, result);
 				}
 			}
 		}
 		return -1;
+	}
+
+	private int finishDivisionPeriodFound(int first, int second, Result result) {
+		int periodLength = findNonZeroDigits(first, second, result);
+		StringBuilder newQuotient = new StringBuilder(result.getQuotient().substring(0, first + 1));
+		String newDecimal = "(" + result.getQuotient().substring(first + 1, first + periodLength) + ")";
+		newQuotient.append(newDecimal);
+		result.setQuotient(newQuotient);
+		return findNonZeroDecimalWithPeriod(newQuotient.toString());
+	}
+
+	private void finishDivisionNoPeriodFound(StringBuilder currentNumerator, int integerOperationQuantity,
+			int decimalOperationQuantity, Result result) {
+		addRemainder(currentNumerator, decimalOperationQuantity, result);
+		String oldInteger = result.getQuotient().substring(0, integerOperationQuantity + 1);
+		String newDecimal = result.getQuotient().substring(integerOperationQuantity + 1,
+				integerOperationQuantity + DIGITS_AFTER_POINT + 1);
+		result.setQuotient(oldInteger + newDecimal);
+		int nonZeroDigitsAfterPoint = findNonZeroDecimalNoPeriod(newDecimal);
+		result.setOperationQuantity(integerOperationQuantity + nonZeroDigitsAfterPoint);
+	}
+
+	private void finishDivisionWithoutPeriod(StringBuilder currentNumerator, int decimalOperationQuantity,
+			Result result) {
+		addRemainder(currentNumerator, decimalOperationQuantity, result);
+		int currentIteration = result.getOperationQuantity() + decimalOperationQuantity;
+		result.setOperationQuantity(currentIteration);
 	}
 	
 	private int findNonZeroDecimalWithPeriod(String newDecimalPart) {
@@ -176,7 +199,8 @@ public class PeriodDivision {
 		String decimalString = newDecimalPart.substring(integerPart + 1);
 		int toExclude = 0;
 		for (int i = 0; i < decimalString.length(); i++) {
-			if ((decimalString.charAt(i) == '0') || (decimalString.charAt(i) == '(') || (decimalString.charAt(i) == ')')) {
+			if ((decimalString.charAt(i) == '0') || (decimalString.charAt(i) == '(')
+					|| (decimalString.charAt(i) == ')')) {
 				toExclude++;
 			}
 		}
@@ -194,23 +218,7 @@ public class PeriodDivision {
 		}
 		return i;
 	}
-	
-	private void decimalLess10FinishDivision(StringBuilder currentNumerator, int decimalOperationQuantity, Result result) {
-		addRemainder(currentNumerator, decimalOperationQuantity, result);
-		int currentIteration = result.getOperationQuantity() + decimalOperationQuantity;
-		result.setOperationQuantity(currentIteration);
-	}
 
-	private void noPeriodFinishDivision(StringBuilder currentNumerator, String newDecimal, int integerOperationQuantity, int decimalOperationQuantity, Result result) {
-		addRemainder(currentNumerator, decimalOperationQuantity, result);
-
-		String oldInteger = result.getQuotient().substring(0, integerOperationQuantity + 1);
-		newDecimal = result.getQuotient().substring(integerOperationQuantity + 1, integerOperationQuantity + 11);
-		result.setQuotient(oldInteger + newDecimal);
-		int nonZeroDigitsAfterPoint = findNonZeroDecimalNoPeriod(newDecimal);
-		result.setOperationQuantity(integerOperationQuantity + nonZeroDigitsAfterPoint);
-	}
-	
 	private void addRemainder(StringBuilder currentNumerator, int decimalOperationQuantity, Result result) {
 		int currentIteration = result.getOperationQuantity() + decimalOperationQuantity;
 		String previousNumerator = result.getCurrentNumeratorElement(currentIteration - 1);

@@ -11,7 +11,7 @@ public class PeriodDivisionTest {
 
 	@Test
 	public void divideDecimal_1_1_correct() {
-		int toDivide = 1;
+		int dividend = 1;
 		int divider = 1;
 		String expected = "1 | 1\n" + 
 		"1 |---\n" + 
@@ -20,13 +20,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_20_4_correct() {
-		int toDivide = 20;
+		int dividend = 20;
 		int divider = 4;
 		String expected = "20 | 4\n" + 
 		"20 |---\n" + 
@@ -35,13 +35,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_10_4_correct() {
-		int toDivide = 10;
+		int dividend = 10;
 		int divider = 4;
 		String expected = "10 | 4\n" + 
 		" 8 |-----\n" + 
@@ -53,13 +53,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_0_1_correct() {
-		int toDivide = 0;
+		int dividend = 0;
 		int divider = 1;
 		String expected = "0 | 1\n" + 
 		"0 |---\n" + 
@@ -68,13 +68,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_0_minus1_correct() {
-		int toDivide = 0;
+		int dividend = 0;
 		int divider = -1;
 		String expected = "0 | -1\n" + 
 		"0 |----\n" + 
@@ -83,13 +83,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_minus1_1_correct() {
-		int toDivide = -1;
+		int dividend = -1;
 		int divider = 1;
 		String expected = "-1 | 1\n" + 
 		" 1 |----\n" + 
@@ -98,13 +98,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_1_minus1_correct() {
-		int toDivide = 1;
+		int dividend = 1;
 		int divider = -1;
 		String expected = "1 | -1\n" + 
 		"1 |----\n" + 
@@ -113,20 +113,20 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test(expected = ArithmeticException.class)
 	public void divideDecimal_1_0_returnsZero() {
-		int toDivide = 1;
+		int dividend = 1;
 		int divider = 0;
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		periodDivision.divideDecimal(dividend, divider);
 	}
 
 	@Test
 	public void divideDecimal_minus1_minus1_correct() {
-		int toDivide = -1;
+		int dividend = -1;
 		int divider = -1;
 		String expected = "-1 | -1\n" + 
 		" 1 |----\n" + 
@@ -135,13 +135,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_minus20992_minus1_correct() {
-		int toDivide = -20992;
+		int dividend = -20992;
 		int divider = -1;
 		String expected = "-20992 | -1\n" + 
 		" 2     |-------\n" + 
@@ -159,13 +159,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_123456_123456_correct() {
-		int toDivide = 123456;
+		int dividend = 123456;
 		int divider = 123456;
 		String expected = "123456 | 123456\n" + 
 		"123456 |--------\n" + 
@@ -174,13 +174,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_123456_1_correct() {
-		int toDivide = 123456;
+		int dividend = 123456;
 		int divider = 1;
 		String expected = "123456 | 1\n" + 
 		"1      |--------\n" + 
@@ -204,13 +204,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_10000_100_correct() {
-		int toDivide = 10000;
+		int dividend = 10000;
 		int divider = 100;
 		String expected = "10000 | 100\n" + 
 		"100   |-----\n" + 
@@ -219,13 +219,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_100_minus99_correct() {
-		int toDivide = 100;
+		int dividend = 100;
 		int divider = -99;
 		String expected = "100 | -99\n" + 
 		" 99 |---------\n" + 
@@ -237,13 +237,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_12000000_100_correct() {
-		int toDivide = 12000000;
+		int dividend = 12000000;
 		int divider = 100;
 		String expected = "12000000 | 100\n" + 
 		"100      |--------\n" + 
@@ -255,13 +255,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_200100_100_correct() {
-		int toDivide = 200100;
+		int dividend = 200100;
 		int divider = 100;
 		String expected = "200100 | 100\n" + 
 		"200    |------\n" + 
@@ -273,13 +273,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_1200600_1200_correct() {
-		int toDivide = 1200600;
+		int dividend = 1200600;
 		int divider = 1200;
 		String expected = "1200600 | 1200\n" + 
 		"1200    |--------\n" + 
@@ -291,13 +291,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_12060_70_correct() {
-		int toDivide = 12060;
+		int dividend = 12060;
 		int divider = 70;
 		String expected = "12060 | 70\n" + 
 		" 70   |--------------\n" + 
@@ -330,13 +330,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_65655_13131_correct() {
-		int toDivide = 65655;
+		int dividend = 65655;
 		int divider = 13131;
 		String expected = "65655 | 13131\n" + 
 		"65655 |-------\n" + 
@@ -345,13 +345,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_10_3_correct() {
-		int toDivide = 10;
+		int dividend = 10;
 		int divider = 3;
 		String expected = "10 | 3\n" + 
 		" 9 |-------\n" + 
@@ -363,13 +363,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_1_4_correct() {
-		int toDivide = 1;
+		int dividend = 1;
 		int divider = 4;
 		String expected = "1 | 4\n" + 
 		"0 |------\n" + 
@@ -384,13 +384,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_1_40_correct() {
-		int toDivide = 1;
+		int dividend = 1;
 		int divider = 40;
 		String expected = "1 | 40\n" + 
 		"0 |-------\n" + 
@@ -405,13 +405,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_1_400_correct() {
-		int toDivide = 1;
+		int dividend = 1;
 		int divider = 400;
 		String expected = "1 | 400\n" + 
 		"0 |--------\n" + 
@@ -426,13 +426,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_4_7_correct() {
-		int toDivide = 4;
+		int dividend = 4;
 		int divider = 7;
 		String expected = "4 | 7\n" + 
 		"0 |------------\n" + 
@@ -459,13 +459,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_1000_77_correct() {
-		int toDivide = 1000;
+		int dividend = 1000;
 		int divider = 77;
 		String expected = "1000 | 77\n" + 
 		" 77  |-------------\n" + 
@@ -492,13 +492,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_minus985_minus1_correct() {
-		int toDivide = -985;
+		int dividend = -985;
 		int divider = -65;
 		String expected = "-985 | -65\n" + 
 		" 65  |-------------\n" + 
@@ -528,13 +528,13 @@ public class PeriodDivisionTest {
 		"\n" + 
 		"*********************\n" + 
 		"\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void divideDecimal_2001_200010_correct() {
-		int toDivide = 2001;
+		int dividend = 2001;
 		int divider = 200010;
 		String expected = "2001 | 200010\n"+
 				   "   0 |--------------\n"+
@@ -561,13 +561,13 @@ public class PeriodDivisionTest {
 				   "\n"+
 				   "*********************\n"+
 				   "\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_1100_313_correct() {
-		int toDivide = 1100;
+		int dividend = 1100;
 		int divider = 313;
 		String expected = 
 				 "1100 | 313\n"+
@@ -607,13 +607,13 @@ public class PeriodDivisionTest {
 				 "\n"+
 				 "*********************\n" +
 				 "\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 	
 	@Test
 	public void divideDecimal_1_313_correct() {
-		int toDivide = 1;
+		int dividend = 1;
 		int divider = 313;
 		String expected = 
 					 "1 | 313\n" +
@@ -647,13 +647,13 @@ public class PeriodDivisionTest {
 			         "\n"+
 			         "*********************\n" +
 			         "\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_2_222_correct() {
-		int toDivide = 2;
+		int dividend = 2;
 		int divider = 222;
 		String expected = 
 					 "2 | 222\n" +
@@ -666,13 +666,13 @@ public class PeriodDivisionTest {
 			         "\n"+
 			         "*********************\n" +
 			         "\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void divideDecimal_7_12_correct() {
-		int toDivide = 7;
+		int dividend = 7;
 		int divider = 12;
 		String expected = 
 					 "7 | 12\n" +
@@ -691,9 +691,8 @@ public class PeriodDivisionTest {
 					 "\n" +
 			         "*********************\n" +
 			         "\n";
-		String actual = periodDivision.divideDecimal(toDivide, divider);
+		String actual = periodDivision.divideDecimal(dividend, divider);
 		assertEquals(expected, actual);
 	}
-
 
 }
