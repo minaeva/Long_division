@@ -146,7 +146,7 @@ public class PeriodDivision {
 		}
 	}
 
-	private int processDecimalPart(StringBuilder currentNumerator, int integerOperationQuantity,
+	private void processDecimalPart(StringBuilder currentNumerator, int integerOperationQuantity,
 			int decimalOperationQuantity, Result result) {
 		int nonZeroFractionalDigits = -1;
 		for (int first = integerOperationQuantity; first < integerOperationQuantity + DIGITS_AFTER_POINT; first++) {
@@ -154,14 +154,13 @@ public class PeriodDivision {
 				if (result.getCurrentNumeratorElement(first).equals(result.getCurrentNumeratorElement(second))) {
 					nonZeroFractionalDigits = finishDivisionPeriodFound(first, second, result);
 					result.setOperationQuantity(integerOperationQuantity + nonZeroFractionalDigits);
-					return 1;
+					return;
 				}
 			}
 		}
 		if (nonZeroFractionalDigits == -1) {
 			finishDivisionNoPeriodFound(currentNumerator, integerOperationQuantity, decimalOperationQuantity, result);
 		}
-		return 1;
 	}
 
 	private int finishDivisionPeriodFound(int first, int second, Result result) {
