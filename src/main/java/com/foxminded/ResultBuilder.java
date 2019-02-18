@@ -2,45 +2,46 @@ package com.foxminded;
 
 public class ResultBuilder {
 
-	private StringBuilder resultBuilt;
+	private StringBuilder divisionResult;
 
 	public ResultBuilder() {
-		this.resultBuilt = new StringBuilder();
+		this.divisionResult = new StringBuilder();
 	}
 
 	public String createString(Result result) {
 		int lastOperationNumber = result.getOperationQuantity();
 		String numerator = result.getNumerator();
 		String denominator = result.getDenominator();
-		boolean isNumeratorNegative = result.getIsNumeratorNegative();
 
 		addFirstLine(numerator, denominator);
-		addSecondLine(isNumeratorNegative, result, numerator);
-		addThirdLine(isNumeratorNegative, result, numerator);
-		addOtherLines(isNumeratorNegative, result, lastOperationNumber);
+		addSecondLine(result, numerator);
+		addThirdLine(result, numerator);
+		addRestLines(result, lastOperationNumber);
 		drawStars();
-		return resultBuilt.toString();
+		return divisionResult.toString();
 	}
 
 	private void addFirstLine(String numerator, String denominator) {
-		appendResult(numerator, " | ", denominator, "\n");
+		appendToDivisionResult(numerator, " | ", denominator, "\n");
 	}
 
-	private void addSecondLine(boolean isNumeratorNegative, Result result, String numerator) {
-		int spacesQuantity;
+	private void addSecondLine(Result result, String numerator) {
+		boolean isNumeratorNegative = result.getIsNumeratorNegative();
 		if (isNumeratorNegative) {
-			appendResult(" ");
+			appendToDivisionResult(" ");
 		}
-		appendResult(createLineOfSymbols(" ", result.getСurrentDeductorShiftElement(0)).toString(),
+		appendToDivisionResult(createLineOfSymbols(" ", result.getСurrentDeductorShiftElement(0)).toString(),
 				result.getСurrentDeductorElement(0));
 
+		int spacesQuantity;
+		int currentNumeratorLength = result.getCurrentNumeratorElement(0).length();
 		if (isNumeratorNegative) {
-			spacesQuantity = numerator.length() - result.getCurrentNumeratorElement(0).length() - 1;
+			spacesQuantity = numerator.length() - currentNumeratorLength - 1;
 		} else {
-			spacesQuantity = numerator.length() - result.getCurrentNumeratorElement(0).length();
+			spacesQuantity = numerator.length() - currentNumeratorLength;
 		}
 		int dashesQuantity = findDenominatorQuotientBiggerLength(result);
-		appendResult(createLineOfSymbols(" ", spacesQuantity).toString(), " |", createLineOfSymbols("-", dashesQuantity).toString(), "\n");
+		appendToDivisionResult(createLineOfSymbols(" ", spacesQuantity).toString(), " |", createLineOfSymbols("-", dashesQuantity).toString(), "\n");
 	}
 
 	private int findDenominatorQuotientBiggerLength(Result result) {
@@ -49,57 +50,60 @@ public class ResultBuilder {
 		return Math.max(denominatorLength, quotientLength) + 2;
 	}
 
-	private void addThirdLine(boolean isNumeratorNegative, Result result, String numerator) {
+	private void addThirdLine(Result result, String numerator) {
 		String minusSpace = " ";
 		int dashesQuantity;
+		boolean isNumeratorNegative = result.getIsNumeratorNegative();
 		if (!isNumeratorNegative) {
 			minusSpace = "";
 			dashesQuantity = numerator.length();
 		} else {
 			dashesQuantity = numerator.length() - 1;
 		}
-		appendResult(minusSpace, createLineOfSymbols("-", dashesQuantity).toString(), " | ",
+		appendToDivisionResult(minusSpace, createLineOfSymbols("-", dashesQuantity).toString(), " | ",
 				result.getQuotient().toString(), "\n");
 	}
 
-	private void addOtherLines(boolean isNumeratorNegative, Result result, int operationsQuantity) {
-		int i = 1;
+	private void addRestLines(Result result, int operationsQuantity) {
 		String minusSpace = " ";
+		boolean isNumeratorNegative = result.getIsNumeratorNegative();
 		if (!isNumeratorNegative) {
 			minusSpace = "";
 		}
 
+		int i = 1;
 		while (i < operationsQuantity) {
-			appendResult(minusSpace, createLineOfSymbols(" ", result.getCurrentNumeratorShiftElement(i)).toString(),
+			appendToDivisionResult(minusSpace, createLineOfSymbols(" ", result.getCurrentNumeratorShiftElement(i)).toString(),
 					result.getCurrentNumeratorElement(i), "\n");
-			appendResult(minusSpace, createLineOfSymbols(" ", result.getСurrentDeductorShiftElement(i)).toString(),
+			appendToDivisionResult(minusSpace, createLineOfSymbols(" ", result.getСurrentDeductorShiftElement(i)).toString(),
 					result.getСurrentDeductorElement(i), "\n");
 
 			int shift = result.getCurrentNumeratorShiftElement(i);
 			StringBuilder dashesQuantity = createLineOfSymbols("-", result.getCurrentNumeratorElement(i).length() + 1);
-			appendResult(minusSpace, createLineOfSymbols(" ", shift).toString(), dashesQuantity.toString(), "\n");
+			appendToDivisionResult(minusSpace, createLineOfSymbols(" ", shift).toString(), dashesQuantity.toString(), "\n");
 			i++;
 		}
-		addLastLine(isNumeratorNegative, result, operationsQuantity);
+		addLastLine(result, operationsQuantity);
 	}
 
-	private void addLastLine(boolean firstMinus, Result result, int operationsQuantity) {
+	private void addLastLine(Result result, int operationsQuantity) {
 		String minusSpace = " ";
-		if (!firstMinus) {
+		boolean isNumeratorNegative = result.getIsNumeratorNegative();
+		if (!isNumeratorNegative) {
 			minusSpace = "";
 		}
 		StringBuilder spacesQuantity = createLineOfSymbols(" ", result.getCurrentNumeratorShiftElement(operationsQuantity));
-		appendResult(minusSpace, spacesQuantity.toString(), result.getCurrentNumeratorElement(operationsQuantity), "\n");
+		appendToDivisionResult(minusSpace, spacesQuantity.toString(), result.getCurrentNumeratorElement(operationsQuantity), "\n");
 	}
 
-	private void appendResult(String... stringToAdd) {
-		for (int i = 0; i < stringToAdd.length; i++) {
-			resultBuilt.append(stringToAdd[i]);
+	private void appendToDivisionResult(String... stringToAdd) {
+		for (String s : stringToAdd) {
+			divisionResult.append(s);
 		}
 	}
 
 	private void drawStars() {
-		appendResult("\n*********************\n\n");
+		appendToDivisionResult("\n*********************\n\n");
 	}
 
 	private StringBuilder createLineOfSymbols(String s, int times) {
